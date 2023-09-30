@@ -80,7 +80,12 @@ fun ColumnScope.MemoList(onClickAction: (Int) -> Unit, memoList: SnapshotStateLi
             .weight(1f)
     ) {
         items(
-            items = memoList
+            items = memoList,
+            /**
+             * item이 추가 될 때마다 발생되는 recomposition을 예방하기 위해
+             * key 값을 준다.
+             */
+            key = { it.id }
         ) { memo ->
             Card(
                 modifier = Modifier
