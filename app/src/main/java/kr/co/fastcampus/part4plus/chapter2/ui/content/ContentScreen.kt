@@ -30,7 +30,11 @@ fun ContentScreen(memoId: Int) {
     Box(Modifier.fillMaxSize()) {
         val scroll = rememberScrollState(0)
         Body(scroll)
-        Title(memo.text, scroll.value)
+        /**
+         * scroll.value 가 아니라
+         * {scroll.value}로 람다로 바꾼다
+         */
+        Title(memo.text, {scroll.value})
     }
 }
 
@@ -68,7 +72,16 @@ private fun Body(
 }
 
 @Composable
-private fun Title(memoText: String, scroll: Int) {
+/**
+ * 상태읽기 연기 기법을 이용한 리팩토링
+ *
+ * scrollProvider의 return Type을 Int가 아니라
+ * Int를 반환하는 람다로 바꾼다.
+ *
+ * 이 리팩토링을 통해 값을 직접 전해주지 않고 람다를 통해서 값을 전해줘서
+ * recompsition이 발생하지 않는 거다.
+ */
+private fun Title(memoText: String, scrollProvider: () -> Int) {
     val maxOffset = with(LocalDensity.current) { MaxTitleOffset.toPx() }
     val minOffset = with(LocalDensity.current) { MinTitleOffset.toPx() }
 
@@ -76,7 +89,10 @@ private fun Title(memoText: String, scroll: Int) {
         modifier = Modifier
             .heightIn(min = MaxTitleOffset)
             .offset {
-                val offset = (maxOffset - scroll).coerceAtLeast(minOffset)
+                /**
+                 * scrollProvider을 call 할 수 있게 scrollProvider()로 바꾼다.
+                 */
+                val offset = (maxOffset - scrollProvider()).coerceAtLeast(minOffset)
                 IntOffset(x = 0, y = offset.toInt())
             }
             .fillMaxWidth()
