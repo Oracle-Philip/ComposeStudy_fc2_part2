@@ -10,6 +10,7 @@ import androidx.compose.material.Typography
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.toArgb
@@ -49,6 +50,11 @@ fun MovieAppTheme(
         )
     }
 }
+
+val MaterialTheme.colorScheme : MyColors
+@Composable
+@ReadOnlyComposable
+get() = LocalColors.current
 /*
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

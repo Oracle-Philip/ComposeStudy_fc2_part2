@@ -30,7 +30,7 @@ fun CategoryRow(){
              * Item 하나가 가지는 패딩보다 더 큰 패딩...
              */
             contentPadding = PaddingValues(
-                horizontal = 10.dp
+                horizontal = Paddings.large
             )
         ){
             /**
