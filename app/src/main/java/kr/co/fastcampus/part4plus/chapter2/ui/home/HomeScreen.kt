@@ -75,16 +75,41 @@ fun AddMemo(memoList: SnapshotStateList<Memo>) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ColumnScope.MemoList(onClickAction: (Int) -> Unit, memoList: SnapshotStateList<Memo>) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .weight(1f)
     ) {
-        items(
+        for (memo in memoList){
+            key(memo.id){
+                Card(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .background(Color.White)
+                        .padding(
+                            horizontal = 16.dp,
+                            vertical = 8.dp
+                        )
+                        .fillMaxWidth(),
+                    backgroundColor = Color.LightGray,
+                    onClick = {
+                        onClickAction(memo.id)
+                    }
+                ) {
+                    Text(
+                        text = memo.text,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+    }
+}
+        /*items(
             items = memoList,
-            /**
+            *//**
              * item이 추가 될 때마다 발생되는 recomposition을 예방하기 위해
              * key 값을 준다.
-             */
+             *//*
             key = { it.id }
         ) { memo ->
             Card(
@@ -107,5 +132,4 @@ fun ColumnScope.MemoList(onClickAction: (Int) -> Unit, memoList: SnapshotStateLi
                 )
             }
         }
-    }
-}
+    }*/
