@@ -70,6 +70,13 @@ fun AddMemo(memoList: SnapshotStateList<Memo>) {
                 .wrapContentWidth()
                 .fillMaxHeight()
         ) {
+            /**
+             * 아래와 같이 읽고나서 쓰는것을
+             * 역방향 쓰기라고 한다.
+             * 쓰지 말아야 한다. 무한루프 돌듯
+             * 무한히 recomposition 발생한다.
+             * 위에 Button( onClick = { } 까지는 괜찮다.
+             */
             Text("ADD\n$count")
             count++
         }
