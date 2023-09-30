@@ -2,7 +2,7 @@ package kr.co.fastcampus.part4plus.movieapp.ui.theme
 
 import androidx.compose.ui.unit.dp
 
-object Padding {
+object Paddings {
     val none = 0.dp
     val xsmall = 2.dp
     val small = 4.dp
