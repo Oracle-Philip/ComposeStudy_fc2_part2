@@ -23,7 +23,8 @@ fun HomeScreen(homeState: HomeState) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
-            val memoList = remember { memos }
+//            val memoList = remember { memos }
+            val memoList = remember { memos.sortedBy { it.id }.toMutableStateList() }
             val onClickAction: (Int) -> Unit = {
                 homeState.showContent(
                     it
@@ -79,8 +80,19 @@ fun ColumnScope.MemoList(onClickAction: (Int) -> Unit, memoList: SnapshotStateLi
         modifier = Modifier
             .weight(1f)
     ) {
+        /**
+         * items = memoList.sortedBy { it.id }, 와 같이 하는 것은 불필요한 계산으로
+         * 비효율적인 recomposition을 유발한다.
+         *
+         *           memoList.add(
+                        index = 0,
+                        Memo(memoList.size, inputValue.value)
+                    ) 이기 때문에
+         remember 처리를 해준다.
+         */
         items(
-            items = memoList.sortedBy { it.id },
+            //items = memoList.sortedBy { it.id },
+            items = memoList,
             key = { it.id }
         ) { memo ->
             Card(
