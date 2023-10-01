@@ -34,7 +34,8 @@ fun UnderlinedTextButton(
             contentColor = MaterialTheme.colorScheme.secondary,
             disabledContentColor = MaterialTheme.colorScheme.background,
             disabledBackgroundColor = MaterialTheme.colorScheme.disabledSecondary
-        )
+        ),
+        elevation = null
     ) {
         /**
          * Arrangement는 Row니까 왼쪽에서 오른쪽 적용

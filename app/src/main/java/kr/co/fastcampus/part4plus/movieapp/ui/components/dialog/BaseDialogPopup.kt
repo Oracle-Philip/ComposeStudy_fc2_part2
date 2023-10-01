@@ -17,6 +17,7 @@ import kr.co.fastcampus.part4plus.movieapp.ui.models.dialog.DialogButton
 import kr.co.fastcampus.part4plus.movieapp.ui.models.dialog.DialogContent
 import kr.co.fastcampus.part4plus.movieapp.ui.models.dialog.DialogText
 import kr.co.fastcampus.part4plus.movieapp.ui.models.dialog.DialogTitle
+import kr.co.fastcampus.part4plus.movieapp.ui.theme.MovieAppTheme
 import kr.co.fastcampus.part4plus.movieapp.ui.theme.Paddings
 import kr.co.fastcampus.part4plus.movieapp.ui.theme.colorScheme
 
@@ -62,18 +63,69 @@ fun BaseDialogPopup(
 
 @Preview
 @Composable
-fun BaseDialogPopupPreview(){
-    BaseDialogPopup(
-        dialogTitle = DialogTitle.Header(text = "test"),
-        dialogContent = DialogContent.Large(
-            dialogText = DialogText.Default(
-                text = "test123"
-            )
-        ),
-        buttons = null,
-    )
+fun BaseDialogHeaderPopupPreview(){
+    MovieAppTheme {
+        BaseDialogPopup(
+            dialogTitle = DialogTitle.Header(text = "Title"),
+            dialogContent = DialogContent.Large(
+                dialogText = DialogText.Default(
+                    text = "ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE"
+                )
+            ),
+            buttons = listOf(
+                DialogButton.Primary(
+                    title = "Okay"
+                )
+            ),
+        )
+    }
 }
 
+@Preview
+@Composable
+fun BaseDialogLargePopupPreview(){
+    MovieAppTheme {
+        BaseDialogPopup(
+            dialogTitle = DialogTitle.Large(text = "Title"),
+            dialogContent = DialogContent.Default(
+                dialogText = DialogText.Default(
+                    text = "ABCDE ABCDE ABCDE ABCDE ABCDE ABCDE"
+                )
+            ),
+            buttons = listOf(
+                DialogButton.Secondary(
+                    title = "Okay"
+                ),
+                DialogButton.UnderlinedText(
+                    title = "Cancel"
+                )
+            ),
+        )
+    }
+}
 
+@Preview
+@Composable
+fun BaseDialogRatingPopupPreview(){
+    MovieAppTheme {
+        BaseDialogPopup(
+            dialogTitle = DialogTitle.Large(text = "Title"),
+            dialogContent = DialogContent.Rating(
+                dialogText = DialogText.Rating(
+                    text = "Joker",
+                    rating = 3.7f
+                )
+            ),
+            buttons = listOf(
+                DialogButton.Primary(
+                    title = "Okay"
+                ),
+                DialogButton.Secondary(
+                    title = "Cancel"
+                )
+            ),
+        )
+    }
+}
 
 

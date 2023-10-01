@@ -29,14 +29,15 @@ fun SecondaryBoderlessButton(
 ){
     Button(
         modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small,
+        shape = MaterialTheme.shapes.large,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.secondary,
             disabledContentColor = MaterialTheme.colorScheme.background,
             disabledBackgroundColor = MaterialTheme.colorScheme.disabledSecondary
-        )
+        ),
+        elevation = null
     ) {
         /**
          * Arrangement는 Row니까 왼쪽에서 오른쪽 적용

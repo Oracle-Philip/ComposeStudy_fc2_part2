@@ -29,7 +29,7 @@ fun SecondaryButton(
 ){
     Button(
         modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small,
+        shape = MaterialTheme.shapes.large,
         onClick = onClick,
         border = BorderStroke(
             2.dp,

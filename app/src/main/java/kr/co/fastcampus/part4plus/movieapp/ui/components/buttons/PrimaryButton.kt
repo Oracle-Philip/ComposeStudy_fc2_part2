@@ -36,7 +36,7 @@ fun PrimaryButton(
 ){
     Button(
         modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small,
+        shape = MaterialTheme.shapes.large,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colorScheme.primary,
@@ -57,8 +57,8 @@ fun PrimaryButton(
             leadingIconData?.let {
                 Icon (
                     modifier = Modifier.size(LEADING_ICON_SIZE),
-                    painter = painterResource(id = leadingIconData.IconDrawable),
-                    contentDescription = stringResource(id = leadingIconData.iconContentDescription)
+                    painter = painterResource(id = leadingIconData.iconDrawable),
+                    contentDescription = leadingIconData.iconContentDescription?.let { desc -> stringResource(id = desc) }
                 )
                 Spacer(modifier = Modifier.width(Paddings.small))
             }
