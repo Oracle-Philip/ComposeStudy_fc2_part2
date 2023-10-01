@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:id="@+id/nav_graph">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/feed_fragment">
+
+    <fragment
+        android:id="@+id/feed_fragment"
+        android:name="kr.co.fastcampus.part4plus.movieapp.features.feed.FeedFragment"
+        android:label="Feed"/>
+    <!-- android:name은 어떤 class인지 지정해주는거다. -->
+
+    <fragment
+        android:id="@+id/detail_fragment"
+        android:name="kr.co.fastcampus.part4plus.movieapp.features.detail.DetailFragment"
+        android:label="Detail"/>
 
 </navigation>
