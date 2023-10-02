@@ -3,9 +3,16 @@ package kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kr.co.fastcampus.part4plus.movieapp.features.common.repository.IMovieDataSource
-import kr.co.fastcampus.part4plus.movieapp.features.common.repository.MovieRepository
+import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.input.IFeedViewModelInput
+import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.output.FeedState
+import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.output.FeedUiEffect
+import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.output.IFeedViewModelOutput
 import javax.inject.Inject
 
 /**
@@ -33,17 +40,63 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val movieRepository: IMovieDataSource
-) : ViewModel() {
+) : ViewModel(), IFeedViewModelOutput, IFeedViewModelInput {
 
-/*    init {
-        viewModelScope.launch {
-            movieRepository.getMovieList()
-        }
-    }*/
+    /**
+     * Repository로부터 Data를 가져왔기 때문에
+     * stateFlow를 이용해서 화면에 Data를 나타내보자.
+     * stateFlow -> 상태를 가지고 있는 Flow이다.
+     *
+     * 처음 _feedState 프로퍼티에 MutableStateFlow 인스턴스를 부여하기 위해서는
+     * MutableStateFlow(FeedState.Loading) 와 같이 초기값이 부여되어야 한다.
+     */
+
+    /**
+     * 유저에게 Flow를 통한 state를 통해 화면에 Data를 보여준다.
+     *
+     * 추가설명> 28:25
+     * 유저로부터 입력을 받아서 fragment 단에서 액션을 수행하기 위한 flow
+     */
+    private val _feedState : MutableStateFlow<FeedState> =
+        MutableStateFlow(FeedState.Loading)
+
+    override val feedState : StateFlow<FeedState>
+        get() = _feedState
+
+    /**
+     * <강의 메모> 23:23 ch16
+     * 유저로부터 입력을 받기 위한 Flow!!
+     * 이때, MutableStateFlow가 아닌 MutableSharedFlow를 사용한다.
+     * MutableSharedFlow는 기본값이 필요없다!!
+     *
+     * MutableSharedFlow에는 replay라는게 있다. Data를 몇번씩 반복해서 보여주냐는 의미!!
+     */
+    private val _feedUiEffect = MutableSharedFlow<FeedUiEffect>(replay = 0)
+    override val feedUiEffect : SharedFlow<FeedUiEffect>
+        get() = _feedUiEffect
+
+    private
 
     fun getMoviews() {
         viewModelScope.launch {
+            /**
+             * 구현으로이동 — Go to Implementation
+                Win: control + alt + B
+                mac: command + alt + B
+             */
             movieRepository.getMovieList()
         }
+    }
+
+    override fun openDetail(movieName: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun openInfoDialog() {
+        TODO("Not yet implemented")
+    }
+
+    override fun refreshFeed() {
+        TODO("Not yet implemented")
     }
 }
