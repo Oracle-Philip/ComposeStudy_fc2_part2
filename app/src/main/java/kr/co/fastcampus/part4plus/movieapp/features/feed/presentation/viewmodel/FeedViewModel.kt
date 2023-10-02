@@ -70,6 +70,15 @@ class FeedViewModel @Inject constructor(
     private val getMovieListUseCase : IGetMovieListUseCase
 ) : ViewModel(), IFeedViewModelOutput, IFeedViewModelInput {
 
+
+    /**
+     * FeedFragment에서
+     * FeedScreen(feedStateHolder = , input = )를 나타내기 위해
+     * IFeedViewModelOutput과 IFeedViewModelInput를 자기자신this를 이용해 전달 하려 한다.
+     */
+    val output : IFeedViewModelOutput = this
+    val input : IFeedViewModelInput = this
+
     /**
      * Repository로부터 Data를 가져왔기 때문에
      * stateFlow를 이용해서 화면에 Data를 나타내보자.
@@ -105,6 +114,7 @@ class FeedViewModel @Inject constructor(
 
     init{
         fetchFeed()
+        //getMoviews()
     }
 
     /**

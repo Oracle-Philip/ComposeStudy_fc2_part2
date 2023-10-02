@@ -9,7 +9,7 @@ import kr.co.fastcampus.part4plus.movieapp.library.network.model.ApiResponse
 import javax.inject.Inject
 
 class GetMovieListUseCase @Inject constructor(
-    val dataSource : IMovieDataSource
+    private val dataSource: IMovieDataSource
 ): IGetMovieListUseCase{
     override suspend fun invoke(): List<MovieResponse>? =
         dataSource.getMovieList()
