@@ -170,7 +170,41 @@ class FeedViewModel @Inject constructor(
     }
 
     override fun openDetail(movieName: String) {
-        TODO("Not yet implemented")
+        /**
+         * <강의 메모> 01:46 ch19
+         * Effect를 본격적으로 사용해 볼 것이다.
+         * Effect는 Flow여서 코루틴 스코프에서 사용한다!
+         */
+        viewModelScope.launch {
+            /**
+             * emit( value = )를 통해 값을 바꿔주자!!
+              */
+            _feedUiEffect.emit(
+                value = FeedUiEffect.OpenMovieDetail(
+                    movieName = movieName
+                )
+                /**
+                 * 위와 같이 바꿔주고 FeedUiEffect를 받는 FeedFragment 코드를 수정해본다!!
+                 * Fragment에서 네비게이션을 옮길 수 있기 때문이다.
+                 */
+
+                /**
+                 * <강의 메모> 02:21 ch19
+                 * 19강의에서 위 프로젝트가 MVI와 가까운 이유는
+                 * 들어가는 데이터와 나가는 데이터의 방향이 다르기 때문이다...
+                 *
+                 * 즉, 들어가는거는 들어가는 것만 해주고.. 나가는거는 나가는 것만 해준다..
+                 *
+                 * Interface IFeedViewModelOutput에서
+                 * feedState는 들어가는 것만 해준다...
+                 * feedUiEffect는 나가는 것만 해준다...
+                 *
+                 * Uni Directional Flow 즉... 단방향 전송 말이다..
+                 *
+                 * FeedFragment에서는 observeUiEffects()라는 메소드를 사용 할 것이다!
+                 */
+            )
+        }
     }
 
     override fun openInfoDialog() {
