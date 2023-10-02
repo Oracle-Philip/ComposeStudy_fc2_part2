@@ -8,7 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kr.co.fastcampus.part4plus.movieapp.features.common.entity.EntityWrapper
+import kr.co.fastcampus.part4plus.movieapp.features.common.network.model.MovieResponse
 import kr.co.fastcampus.part4plus.movieapp.features.common.repository.IMovieDataSource
+import kr.co.fastcampus.part4plus.movieapp.features.feed.domain.usecase.IGetFeedCategoryUseCase
+import kr.co.fastcampus.part4plus.movieapp.features.feed.domain.usecase.IGetMovieListUseCase
 import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.input.IFeedViewModelInput
 import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.output.FeedState
 import kr.co.fastcampus.part4plus.movieapp.features.feed.presentation.output.FeedUiEffect
@@ -39,7 +43,31 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val movieRepository: IMovieDataSource
+    /**
+     * <강의 메모> 18:44 ch17
+     * UseCase IGetFeedCategoryUseCase를 사용하기 전에는
+     * IMovieDataSource Type에 movieRepository를 사용했지만,
+     * 이제 이것을 주석 처리한다. 왜냐하면
+     * IGetFeedCategoryUseCase를 구현한 UseCase class에서 똑같이
+     * private val movieRepository: IMovieDataSource를 사용하기 때문에
+     * UseCase class만 있으면 movieRepository를 사용할 수 있다.
+     * 따라서 FeedViewModel에서 IMovieDataSource 직접 참조를 하지 않을 것이다.
+     */
+//    private val movieRepository: IMovieDataSource,
+    /**
+     * <강의 메모> 16:01 ch17
+     * useCase를 추가한다.
+     *
+     * 16:43 useCase는 단 하나의 역할, 단 하나의 일을 수행하기 위한 class로
+     * Interface와 이를 구현한 class로 나뉘어진다.
+     * DI를 통해 처리해보자.
+     */
+    private val getFeedCategoryUseCase : IGetFeedCategoryUseCase,
+    /**
+     * <<강의 외적인 것>> 20:41 ch17 2023-10-02-03-55-PM
+     * 이것은 강의 외적인 것으로 getMovieList()에 관한 UseCase 이다.
+     */
+    private val getMovieListUseCase : IGetMovieListUseCase
 ) : ViewModel(), IFeedViewModelOutput, IFeedViewModelInput {
 
     /**
@@ -75,17 +103,60 @@ class FeedViewModel @Inject constructor(
     override val feedUiEffect : SharedFlow<FeedUiEffect>
         get() = _feedUiEffect
 
-    private
+    init{
+        fetchFeed()
+    }
 
-    fun getMoviews() {
+    /**
+     * 이제까지 처리했던 영화의 Data를 viewModel로 가져오는 함수
+     */
+    private fun fetchFeed() {
+        viewModelScope.launch {
+            _feedState.value = FeedState.Loading
+
+            /**
+             * UseCase class의 메소드나 인스턴스가 아니다.
+             * interface IGetFeedCategoryUseCase에 대해서
+             * UseCase가 하나의 일만을 수행하기 위해 .invoke()를 사용하는데,
+             * 소괄호 (, )만으로 대체하기 위해
+             * suspend operator fun invoke()를 사용한 것이다.
+             * 그걸 의미한다.
+             * getFeedCategoryUseCase.invoke() 인것이다.
+             */
+            val categories = getFeedCategoryUseCase()
+            _feedState.value = when(categories){
+                is EntityWrapper.Success -> {
+                    FeedState.Main(
+                        categories = categories.entity
+                    )
+                }
+                is EntityWrapper.Fail -> {
+                    FeedState.Failed(
+                        reason = categories.error.message ?: "Unknown Error"
+                    )
+                }
+            }
+        }
+    }
+
+    fun getMoviews() : List<MovieResponse>?{
         viewModelScope.launch {
             /**
              * 구현으로이동 — Go to Implementation
                 Win: control + alt + B
                 mac: command + alt + B
              */
-            movieRepository.getMovieList()
+            //movieRepository.getMovieList()
+            /**
+             * <<강의 외적인 것>>
+             * 기존 movieRepository.getMovieList() 기능을 수행하는
+             * UseCase Interface와 class를 구현해보자!!
+             */
+
+           val data = getMovieListUseCase()
+        //return@launch data
         }
+        return null
     }
 
     override fun openDetail(movieName: String) {

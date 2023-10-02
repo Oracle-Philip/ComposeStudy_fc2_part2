@@ -1,8 +1,15 @@
 package kr.co.fastcampus.part4plus.movieapp.features.common.repository
 
+import kr.co.fastcampus.part4plus.movieapp.features.common.entity.CategoryEntity
+import kr.co.fastcampus.part4plus.movieapp.features.common.entity.EntityWrapper
+import kr.co.fastcampus.part4plus.movieapp.features.common.entity.MovieDetailEntity
 import kr.co.fastcampus.part4plus.movieapp.features.common.network.api.IMovieAppNetworkApi
+import kr.co.fastcampus.part4plus.movieapp.features.common.network.model.MovieResponse
+import kr.co.fastcampus.part4plus.movieapp.features.feed.data.FeedConstants
+import kr.co.fastcampus.part4plus.movieapp.features.feed.data.mapper.CategoryMapper
+import kr.co.fastcampus.part4plus.movieapp.features.feed.domain.enum_.SortOrder
 import kr.co.fastcampus.part4plus.movieapp.library.network.model.ApiResponse
-import timber.log.Timber
+import kr.co.fastcampus.part4plus.movieapp.library.storage.IStorage
 import javax.inject.Inject
 
 /**
@@ -31,13 +38,48 @@ import javax.inject.Inject
 /**
  * DI를 사용하면 IMovieAppNetworkApi의 구현체를 가져올 수 있다.
  */
+
+/**
+ * <강의 메모> 01:45 ch17
+ * categoryMapper는 response로 받아온 file을 category로 만드는데 사용된다.
+ */
+
+/**
+ * <강의 메모> 04:11 ch17
+ * EntityWrapper는 Data를 success or fail 할 수 있는데 그 성공 실패 여부를 가지고
+ * 있는것은 Api Result이다. 이때 sealed class ApiResponse는 네트워크 계층을 고려해 구현되어 있다.
+ * 이와 관련해 화면 계층에 success와 fail을 보여줄 수 있게 EntityWrapper를 만드는 것이다!!
+ */
 class MovieRepository @Inject constructor(
-    private val movieNetworkApi : IMovieAppNetworkApi
+    private val movieNetworkApi : IMovieAppNetworkApi,
+    private val storage : IStorage,
+    private val categoryMapper : CategoryMapper
 ): IMovieDataSource {
-    override suspend fun getMovieList() {
+    override suspend fun getMovieList(): List<MovieResponse>? {
         val data = movieNetworkApi.getMovies().response
         if (data is ApiResponse.Success){
             val movieList = data.data
+            return movieList
         }
+        return null
+    }
+
+    override suspend fun getCategories(sortOrder: SortOrder?): EntityWrapper<List<CategoryEntity>> {
+        return categoryMapper.mapFromResult(
+            result = movieNetworkApi.getMovies(),
+            extra = sortOrder
+        )
+    }
+
+    override suspend fun getMovieDetail(movieName: String): MovieDetailEntity {
+/*        return storage
+            .get<List<MovieDetailEntity>>(FeedConstants.MOVIE_LIST_KEY)
+            ?.single { it.title == movieName }
+            ?: MovieDetailEntity()*/
+        return storage
+            .get<List<MovieDetailEntity>>(
+                FeedConstants.MOVIE_LIST_KEY)
+                ?.single { it.title == movieName }
+                ?: MovieDetailEntity()
     }
 }
